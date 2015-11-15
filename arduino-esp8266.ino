@@ -20,7 +20,7 @@ void setup() {
       // Connect to server
       Serial.println("Connecting to Server");
       altSerial.print("AT+CIPSTART=\"TCP\",\"" + HOST+ "\"," + PORT+ "\r\n");
-      getReply( 2500 );
+      getReply( 3500 );
 
       // Setup Send
       Serial.println("Setting up send value");
@@ -29,7 +29,7 @@ void setup() {
 
       // Make Request
       Serial.println("Making request");
-      altSerial.print("GET /v1/rest/list/game HTTP/1.0\r\n\r\n");
+      altSerial.print("GET " + BASE_REST + "list/game HTTP/1.0\r\n\r\n");
       getReply( 5000 );
 }
 
@@ -39,9 +39,10 @@ void loop() {
 
 void getReply(int wait)
 {
-    // Sorry
     int index = 0;
     long int time = millis();
+
+    // Sorry
     while( (time + wait) > millis())
     {
         while(altSerial.available())
@@ -56,3 +57,4 @@ void getReply(int wait)
     Serial.println( reply ); // Output response
     Serial.println("\r\n"); // New line for legibility
 }
+
