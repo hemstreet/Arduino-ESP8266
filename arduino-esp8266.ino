@@ -1,4 +1,4 @@
-#include "config.h"
+#include "config/config.h"
 #include <AltSoftSerial.h>
 
 // Arduino pin 08 for RX
