@@ -14,7 +14,7 @@ Todo
 --
 * [ ] Async http calls
 * [ ] ESP8266 specific code broken out in HTTP library
-* [ ] Remove hardcoded variables
+* [x] Remove hardcoded variables ( need to extend out config )
 * [ ] Implement header bases authentication
 
 Credits
