@@ -5,6 +5,11 @@ Arduino ESP8266
 
 After going through many tutorials about the ESP8266 and Arduino ( nano in my case ), I quickly realized there was not a good example of it in use.
 
+
+Setup
+---
+Rename `_config.h` to `config.h` and update the values
+
 Todo
 --
 * [ ] Async http calls
