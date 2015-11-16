@@ -1,4 +1,4 @@
-#include "config/config.h"
+#include "config.h"
 #include <AltSoftSerial.h>
 
 // Arduino pin 08 for RX
@@ -30,11 +30,26 @@ void setup() {
       // Make Request
       Serial.println("Making request");
       altSerial.print("GET " + BASE_REST + "list/game HTTP/1.0\r\n\r\n");
-      getReply( 5000 );
+      getGames( 5000 );
 }
 
 void loop() {
 
+}
+
+void getJSONFromResponse(char* responseData) {
+
+  char *p, *i, *x;
+
+   p = strtok_r(responseData, STARTDELIMITER,&i);
+   x = strtok_r(i,ENDDELIMITER,&i);
+   Serial.print(x);
+
+//
+//  Serial.println("--------------\r\n\r\n");
+//  Serial.println(responseData);
+//  Serial.println("--------------\r\n\r\n");
+//
 }
 
 void getReply(int wait)
@@ -58,3 +73,25 @@ void getReply(int wait)
     Serial.println("\r\n"); // New line for legibility
 }
 
+
+void getGames(int wait)
+{
+    int index = 0;
+    long int time = millis();
+
+    // Sorry
+    while( (time + wait) > millis())
+    {
+        while(altSerial.available())
+        {
+            char c = altSerial.read();
+              reply[index] = c;
+              index++;
+        }
+    }
+
+    getJSONFromResponse(reply);
+
+    Serial.println( reply ); // Output response
+    Serial.println("\r\n"); // New line for legibility
+}
