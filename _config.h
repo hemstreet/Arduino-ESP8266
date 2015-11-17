@@ -1,4 +1,4 @@
-// Example config.h
+// Rename this file to config.h
 #ifndef Config_h
 #define Config_h
 

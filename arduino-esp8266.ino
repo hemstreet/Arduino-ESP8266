@@ -1,19 +1,25 @@
 #include "config.h"
 #include <AltSoftSerial.h>
+#include <aJSON.h>
 
-// Arduino pin 08 for RX
-// Arduino Pin 09 for TX
-
+// D8 for RX, D9 for TX
 AltSoftSerial altSerial;
 
+char* parseJson(aJsonObject* root, char* parameter);
+
 // @todo fix this horrible thing, Sorry
-char reply[1000]; // Buffer size
+char reply[500]; // Buffer size
 
 void setup() {
+  
       Serial.begin(9600); // Setup debug serial
       altSerial.begin(9600); // Setup ESP
 
+      Serial.println("Start");
+      
       //Enter the SSID and password for your own network
+
+      Serial.println("Connecting to wifi");
       altSerial.print("AT+CWJAP=\"" + SSID_NAME + "\",\"" + SSID_PASSWORD + "\"\r\n");
       getReply( 5000 );
 
@@ -38,14 +44,24 @@ void loop() {
 }
 
 void getJSONFromResponse(char* responseData) {
-
-  char *p, *i;
+   
+   char *p, *i;
    Serial.println("\r\n\r\n--------------\r\n\r\n");
    p = strtok_r(responseData, STARTDELIMITER,&i);
    p = strtok_r(i,ENDDELIMITER,&i);
-   Serial.print(p);
+   Serial.println(p);
+
+   Serial.println("\r\n\r\n----JSON--------\r\n\r\n");
+
+//   char* nameOfGame = parseJson(p, "name");   
+//   Serial.println(nameOfGame);
+   
+   char* plays = parseJson(p, "plays");   
+   Serial.println(plays);
    
    Serial.println("\r\n\r\n\r\n--------------\r\n\r\n");
+
+   
 }
 
 void getReply(int wait)
@@ -70,9 +86,12 @@ void getReply(int wait)
 }
 
 
+// Simplify method so we do no repeat getReply
 void getGames(int wait)
 {
+
     int index = 0;
+    
     long int time = millis();
 
     // Sorry
@@ -90,5 +109,19 @@ void getGames(int wait)
     
     Serial.println( reply ); // Output response
     Serial.println("\r\n"); // New line for legibility
+}
+
+char* parseJson(char* p, char* parameter) 
+{
+    // @todo Very inefficient :(
+    aJsonObject* root = aJson.parse(p);
+    
+    if (root != NULL) {
+        return aJson.getObjectItem(root, parameter)->valuestring; 
+    }
+    else
+    {
+      Serial.println("Root was null :(");
+    }
 }
 
